@@ -5,10 +5,12 @@ import axios from "axios";
 import {API_BASE_URL} from "../../misc/miscellaneous";
 
 interface IModalForm{
-    client:Client
+    client:Client,
+    clients:Array<Client>
+    setClients(clients:Array<Client>):void
 }
 
-const ModalForm:React.FC<IModalForm> = ({client}:IModalForm) => {
+const ModalForm:React.FC<IModalForm> = ({client, clients, setClients}:IModalForm) => {
 
     const [editedClient, setEditedClient] = React.useState(client);
     const stages:Array<string> = ['Closed', 'Contacted', 'Diligence', 'Lead', 'Rejected'];
@@ -22,7 +24,7 @@ const ModalForm:React.FC<IModalForm> = ({client}:IModalForm) => {
         e.preventDefault();
         console.log(editedClient);
         try{
-            const putRequest = await axios.put(`${API_BASE_URL}/clients/${editedClient.id}`, {
+            await axios.put(`${API_BASE_URL}/clients/${editedClient.id}`, {
                 first_name: editedClient.firstName,
                 last_name: editedClient.lastName,
                 email: editedClient.email,
@@ -31,9 +33,18 @@ const ModalForm:React.FC<IModalForm> = ({client}:IModalForm) => {
                 probability: editedClient.probability,
                 stage: editedClient.stage
             });
-            const putResponse = await putRequest
-            const putData = putResponse.data
-            console.log(putData);
+
+            let newClientsArr:Array<Client> = []
+            clients.map(client => {
+                if(client.id === editedClient.id){
+                    client = editedClient
+                    newClientsArr.push(client)
+                } else {
+                    newClientsArr.push(client)
+                }
+            })
+            setClients(newClientsArr);
+
         } catch(errors:any) {
             if(errors.response.status === 404){
                 alert('Client Not Found');

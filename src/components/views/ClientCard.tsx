@@ -72,7 +72,7 @@ const ClientCard:React.FC<IClientCard> = ({client, clients, setClients}:IClientC
             </CardContent>
             <Modal open={showModal} onClose={handleEditClick} >
                 <Box sx={style}>
-                    <ModalForm client={client} />
+                    <ModalForm client={client} clients={clients} setClients={setClients}/>
                 </Box>
             </Modal>
         </Card>
