@@ -1,17 +1,14 @@
 import React from "react";
-import axios from "axios";
-import {API_BASE_URL, customFilter} from "../../misc/miscellaneous";
 import ClientCard from "./ClientCard";
 import Client from "../../misc/Client";
-import {Container, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {Grid} from "@mui/material";
 
 interface IClientContainer {
     clients:Array<Client>
     setClients(clients:Array<Client>):void
-    searchTerm:string
 }
 
-const ClientContainer:React.FC<IClientContainer> = ({clients, setClients, searchTerm}:IClientContainer) => {
+const ClientContainer:React.FC<IClientContainer> = ({ clients, setClients }:IClientContainer) => {
 
     // Just used to contain the cards
 

@@ -12,7 +12,6 @@ const TopContainer:React.FC = () => {
     // This container is where I'll call the index API
 
     const [clients, setClients] = React.useState<Array<Client>>([]);
-    const [searchTerm, setSearchTerm] = React.useState('');
 
     React.useEffect(() => {
         const fetchClients = async () => {
@@ -25,8 +24,8 @@ const TopContainer:React.FC = () => {
 
     return(
         <div style={{ overflowY: 'hidden'}}>
-            <TopBar clients={clients} setClients={setClients} setSearchTerm={setSearchTerm}/>
-            <ClientContainer searchTerm={searchTerm} clients={clients} setClients={setClients}/>
+            <TopBar />
+            <ClientContainer clients={clients} setClients={setClients}/>
             <BottomBar />
         </div>
     )
