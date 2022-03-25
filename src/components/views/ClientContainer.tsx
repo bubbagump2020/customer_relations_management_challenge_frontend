@@ -3,7 +3,7 @@ import axios from "axios";
 import {API_BASE_URL} from "../../misc/miscellaneous";
 import ClientCard from "./ClientCard";
 import Client from "../../misc/Client";
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {Container, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 
 const ClientContainer:React.FC = () => {
 
@@ -26,24 +26,9 @@ const ClientContainer:React.FC = () => {
     }
 
     return(
-        <TableContainer component={Paper}>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>First Name</TableCell>
-                        <TableCell>Last Name</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell>Stage</TableCell>
-                        <TableCell>Phone</TableCell>
-                        <TableCell>Company</TableCell>
-                        <TableCell>Probability</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {showClients(clients)}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <Grid container sx={{ justifyContent: 'center'}}>
+            {showClients(clients)}
+        </Grid>
     )
 }
 

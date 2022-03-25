@@ -5,9 +5,7 @@ import '../style/Table.sass';
 const TopContainer:React.FC = () => {
     return(
         <div>
-            <div className={'table-wrapper'}>
-                <ClientContainer />
-            </div>
+            <ClientContainer />
         </div>
     )
 }
