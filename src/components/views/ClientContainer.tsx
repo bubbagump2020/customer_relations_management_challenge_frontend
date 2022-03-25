@@ -14,19 +14,18 @@ const ClientContainer:React.FC = () => {
             const fetchResponse = await axios.get(`${API_BASE_URL}/clients`)
             const responseData = await fetchResponse.data;
             setClients(Client.createArrayOfClients(responseData));
-            console.log(responseData);
         }
         fetchClients();
     }, [])
 
     const showClients = (clients:Array<Client>) => {
         return clients.map((client, index) => {
-            return <ClientCard key={index} client={client} />
+            return <ClientCard key={index} client={client} clients={clients} setClients={setClients}/>
         })
     }
 
     return(
-        <Grid container sx={{ justifyContent: 'center'}}>
+        <Grid container sx={{ justifyContent: 'center' }}>
             {showClients(clients)}
         </Grid>
     )

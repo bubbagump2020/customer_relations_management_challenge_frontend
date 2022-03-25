@@ -9,6 +9,8 @@ import ModalForm from "../forms/ModalForm";
 
 interface IClientCard {
     client:Client
+    clients:Array<Client>
+    setClients(clients:Array<Client>):void
 }
 
 const style = {
@@ -23,9 +25,9 @@ const style = {
     p: 4,
 };
 
-const ClientCard:React.FC<IClientCard> = ({client}:IClientCard) => {
+const ClientCard:React.FC<IClientCard> = ({client, clients, setClients}:IClientCard) => {
 
-    const [showModal, setShowModal] = React.useState<boolean>(false);
+    const [showModal, setShowModal] = React.useState(false);
 
     const handleDeleteClick = async (e:BaseSyntheticEvent) => {
         e.preventDefault();
