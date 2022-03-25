@@ -1,25 +1,59 @@
-import React from "react";
+import React, {BaseSyntheticEvent} from "react";
 import Client from "../../misc/Client";
-import {Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography} from "@mui/material";
+import {Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography} from "@mui/material";
+import axios from "axios";
+import {API_BASE_URL} from "../../misc/miscellaneous";
 
 interface IModalForm{
-    client:Client
+    client:Client,
+    clients:Array<Client>
+    setClients(clients:Array<Client>):void
 }
 
-const ModalForm:React.FC<IModalForm> = ({client}:IModalForm) => {
+const ModalForm:React.FC<IModalForm> = ({client, clients, setClients}:IModalForm) => {
 
     const [editedClient, setEditedClient] = React.useState(client);
-
     const stages:Array<string> = ['Closed', 'Contacted', 'Diligence', 'Lead', 'Rejected'];
-
     const showStageValues = (stages:Array<string>) => {
         return stages.map((stage, index) => {
             return <MenuItem key={index} value={stage}>{stage}</MenuItem>
         })
     }
 
+    const handleSubmit = async (e:BaseSyntheticEvent) => {
+        e.preventDefault();
+        console.log(editedClient);
+        try{
+            await axios.put(`${API_BASE_URL}/clients/${editedClient.id}`, {
+                first_name: editedClient.firstName,
+                last_name: editedClient.lastName,
+                email: editedClient.email,
+                phone: editedClient.phone,
+                company: editedClient.company,
+                probability: editedClient.probability,
+                stage: editedClient.stage
+            });
+
+            let newClientsArr:Array<Client> = []
+            clients.map(client => {
+                if(client.id === editedClient.id){
+                    client = editedClient
+                    newClientsArr.push(client)
+                } else {
+                    newClientsArr.push(client)
+                }
+            })
+            setClients(newClientsArr);
+
+        } catch(errors:any) {
+            if(errors.response.status === 404){
+                alert('Client Not Found');
+            }
+        }
+    }
+
     return(
-        <Box component={'form'} sx={{ '& .MuiTextField-root': {m: 1, width: '25ch'} }}>
+        <Box onSubmit={handleSubmit} component={'form'} sx={{ '& .MuiTextField-root': {m: 1, width: '25ch'} }}>
             <div>
                 <Typography variant={'h6'}>Client Name</Typography>
                 <TextField
@@ -88,6 +122,7 @@ const ModalForm:React.FC<IModalForm> = ({client}:IModalForm) => {
                     </Select>
                 </FormControl>
             </div>
+            <Button type={'submit'} sx={{marginTop: '10px', marginBottom: '0px'}} onSubmit={handleSubmit} variant={'contained'}>Submit</Button>
         </Box>
     )
 }
