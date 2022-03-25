@@ -14,6 +14,7 @@ const ClientContainer:React.FC = () => {
             const fetchResponse = await axios.get(`${API_BASE_URL}/clients`)
             const responseData = await fetchResponse.data;
             setClients(Client.createArrayOfClients(responseData));
+            console.log(responseData);
         }
         fetchClients();
     }, [])
