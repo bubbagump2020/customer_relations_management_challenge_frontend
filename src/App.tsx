@@ -3,7 +3,7 @@ import TopContainer from "./components/TopContainer";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" style={{ overflow: 'hidden'}}>
       <TopContainer />
     </div>
   );

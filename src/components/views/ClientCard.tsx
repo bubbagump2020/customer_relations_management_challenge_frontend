@@ -33,7 +33,6 @@ const ClientCard:React.FC<IClientCard> = ({client, clients, setClients}:IClientC
         e.preventDefault();
         const deleteRequest = await axios.delete(`${API_BASE_URL}/clients/${client.id}`)
         const deleteData = await deleteRequest
-        console.log(deleteData)
     }
 
     const handleEditClick = (e:BaseSyntheticEvent) => {

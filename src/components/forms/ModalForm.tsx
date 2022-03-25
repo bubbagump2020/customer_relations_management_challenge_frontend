@@ -22,7 +22,6 @@ const ModalForm:React.FC<IModalForm> = ({client, clients, setClients}:IModalForm
 
     const handleSubmit = async (e:BaseSyntheticEvent) => {
         e.preventDefault();
-        console.log(editedClient);
         try{
             await axios.put(`${API_BASE_URL}/clients/${editedClient.id}`, {
                 first_name: editedClient.firstName,
