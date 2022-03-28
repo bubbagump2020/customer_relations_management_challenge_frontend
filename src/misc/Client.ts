@@ -26,9 +26,7 @@ class Client {
 
     static createArrayOfClients = (clients:Array<any>):Array<Client> => {
         let clientsArray:Array<Client> = [];
-        clients.map(client => {
-            clientsArray.push(Client.createClient(client));
-        })
+        clients.map(client => clientsArray.push(Client.createClient(client)));
         return clientsArray;
     }
 

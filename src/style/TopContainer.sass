@@ -29,16 +29,19 @@
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px
     p: 4
 
-.show-clients-container
-  justify-content: center
+.clients-container
   height: 90vh
   overflow-y: scroll
+  .clients-container-grid
+    justify-content: center
 
-.top-bottom-bar
+.top-bar
   position: sticky
-  height: 5vh
+  display: flex
   justify-content: space-between
-  padding: 20px
+  height: 5vh
+  padding: 15px
+  background-color: aliceblue
 
 
 ::-webkit-scrollbar

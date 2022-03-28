@@ -1,34 +1,39 @@
 import React from 'react';
 import ClientContainer from "./views/ClientContainer";
-import '../style/Table.sass';
+import '../style/TopContainer.sass';
 import TopBar from "./TopBar";
-import BottomBar from "./BottomBar";
 import Client from "../misc/Client";
 import axios from "axios";
 import {API_BASE_URL} from "../misc/miscellaneous";
 
 const TopContainer:React.FC = () => {
 
-    // This container is where I'll call the index API
+    // state for the visibile list of clients that have been searched for
+    const [visibleClients, setClients] = React.useState<Array<Client>>([]);
 
-    const [clients, setClients] = React.useState<Array<Client>>([]);
+    // unmodified list of clients
+    const [allClients, setAllClients] =React.useState<Array<Client>>([]);
 
+    // state for the visibility of the TopBar modal
+    const [isOpen, setIsOpen] = React.useState(false);
+
+    // API call to #index in Rails
     React.useEffect(() => {
         const fetchClients = async () => {
-            const fetchRequest = await axios.get(`${API_BASE_URL}/clients`)
-            const fetchResponse = await fetchRequest
-            setClients(Client.createArrayOfClients(fetchResponse.data))
+            const fetchRequest = await axios.get(`${API_BASE_URL}/clients?limit=5`);
+            const fetchResponse = await fetchRequest;
+            setClients(Client.createArrayOfClients(fetchResponse.data));
+            setAllClients(Client.createArrayOfClients(fetchResponse.data));
         }
         fetchClients();
-    }, [])
+    }, []);
 
     return(
         <div style={{ overflowY: 'hidden'}}>
-            <TopBar />
-            <ClientContainer clients={clients} setClients={setClients}/>
-            <BottomBar />
+            <TopBar allClients={allClients} isOpen={isOpen} setIsOpen={setIsOpen} setClients={setClients}/>
+            <ClientContainer clients={visibleClients} setClients={setClients}/>
         </div>
-    )
+    );
 }
 
 export default TopContainer;

@@ -1,7 +1,7 @@
-import React from "react";
+import React, { BaseSyntheticEvent } from "react";
 import ClientCard from "./ClientCard";
 import Client from "../../misc/Client";
-import {Grid} from "@mui/material";
+import {Grid, Box, Pagination } from "@mui/material";
 
 interface IClientContainer {
     clients:Array<Client>
@@ -10,18 +10,48 @@ interface IClientContainer {
 
 const ClientContainer:React.FC<IClientContainer> = ({ clients, setClients }:IClientContainer) => {
 
-    // Just used to contain the cards
+    // constants for the pagination
+    const ITEMS_PER_PAGE:number = 19;
+    const PAGE_COUNT:number = Math.ceil(clients.length / ITEMS_PER_PAGE);
 
-        const showClients = (clients:Array<Client>) => {
-        return clients.map((client, index) => {
-            return <ClientCard key={index} client={client} clients={clients} setClients={setClients}/>
-        })
+    // state for the current page of pagination
+    const [currentPage, setCurrentPage] = React.useState(1);
+
+    // function for showing clients on current page
+    const showClients = (clients:Array<Client>) => {
+        const start:number = (currentPage - 1) * ITEMS_PER_PAGE;
+        const end:number = start + ITEMS_PER_PAGE;
+        const pageClients:Array<Client> = clients.slice(start, end);
+        return pageClients.map((client, index) => {
+            return <ClientCard key={index} client={client} />
+        });
+    }
+
+    // function for handling the pagination page change
+    const handlePageChange = (e:BaseSyntheticEvent) => {
+        e.preventDefault();
+        const newPage:number = parseInt(e.target.innerText);
+        setCurrentPage(newPage);
     }
 
     return(
-        <Grid className={'show-clients-container'} container >
-            {showClients(clients)}
-        </Grid>
+        <Box  className={"clients-container"}>
+            <Grid container className={'clients-container-grid'}>
+                <Pagination
+                    count={PAGE_COUNT}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                />
+            </Grid>
+            <Grid container className={'clients-container-grid'}>{showClients(clients)}</Grid>
+            <Grid container className={'clients-container-grid'}>
+                <Pagination
+                    count={PAGE_COUNT}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                />
+            </Grid>  
+        </Box>
     )
 }
 
