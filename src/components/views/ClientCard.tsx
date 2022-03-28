@@ -1,15 +1,14 @@
 import React, {BaseSyntheticEvent} from 'react';
 import Client from "../../misc/Client";
-import {Box, Button, Card, CardContent, Grid, Modal, TableCell, TableRow, Typography} from "@mui/material";
+import {Box, Button, Card, CardContent, Grid, Modal, Typography} from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
-import '../../style/Table.sass'
+import '../../style/TopContainer.sass'
 import axios from "axios";
 import {API_BASE_URL} from "../../misc/miscellaneous";
 import ModalForm from "../forms/ModalForm";
 
 interface IClientCard {
     client:Client
-    setClients(clients:Array<Client>):void
 }
 
 const style = {
@@ -24,28 +23,42 @@ const style = {
     p: 4,
 };
 
-const ClientCard:React.FC<IClientCard> = ({client, setClients}:IClientCard) => {
+const ClientCard:React.FC<IClientCard> = ({ client }:IClientCard) => {
 
+    // state for the visibility of the ClientCard modal
     const [showModal, setShowModal] = React.useState(false);
+
+    // state for the client to be editted.
     const [editClient, setEditClient] = React.useState(client);
 
-    const handleDeleteClick = async (e:BaseSyntheticEvent) => {
-        e.preventDefault();
-        const deleteRequest = await axios.delete(`${API_BASE_URL}/clients/${client.id}`)
-        const deleteResponse = await deleteRequest
-        const { clients } = deleteResponse.data;
-        setClients(clients);
-    }
-
+    // function handling the visibility of the ClientCard modal
     const handleEditClick = (e:BaseSyntheticEvent) => {
-        e.preventDefault()
-        setShowModal(!showModal)
+        e.preventDefault();
+        setShowModal(!showModal);
     }
+    // API call to #destroy in Rails
+    const handleDeleteClick = async () => {
+        try{
+            const deleteRequest = await axios.delete(`${API_BASE_URL}/clients/${client.id}`);
+            const deleteResponse = await deleteRequest;
+            if(deleteResponse.status === 200){
+                alert(deleteResponse.data.response);
+                // For some reason even without the e.preventDefault() the page still won't reload, using this
+                // to force a page reload.
+                window.location.reload();
 
+            }
+        } catch(errors:any){
+            if(errors.response.status === 404){
+                alert('Client Not Found');
+            }
+        }
+    }
+    // API call to #update in Rails
     const handleSubmit = async (e:BaseSyntheticEvent) => {
         e.preventDefault();
         try{
-            let updateRequest = await axios.put(`${API_BASE_URL}/clients/${editClient.id}`, {
+            const updateRequest = await axios.put(`${API_BASE_URL}/clients/${editClient.id}`, {
                 first_name: editClient.firstName,
                 last_name: editClient.lastName,
                 email: editClient.email,
@@ -55,8 +68,9 @@ const ClientCard:React.FC<IClientCard> = ({client, setClients}:IClientCard) => {
                 stage: editClient.stage
             });
             const updateResponse = await updateRequest;
-            const { clients } = updateResponse.data;
-            setClients(clients);
+            if(updateResponse.status === 200){
+                alert(updateResponse.data.response);
+            }
         } catch(errors:any) {
             if(errors.response.status === 404){
                 alert('Client Not Found');
@@ -85,7 +99,6 @@ const ClientCard:React.FC<IClientCard> = ({client, setClients}:IClientCard) => {
                     <Typography variant={'h6'}>Email: {client.email}</Typography>
                 </Grid>
                 <div />
-
             </CardContent>
             <CardContent>
                 <Grid container sx={{ justifyContent: 'space-between'}}>
@@ -99,7 +112,7 @@ const ClientCard:React.FC<IClientCard> = ({client, setClients}:IClientCard) => {
                 </Box>
             </Modal>
         </Card>
-    )
+    );
 }
 
 export default ClientCard;

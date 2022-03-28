@@ -1,12 +1,14 @@
-import React, {BaseSyntheticEvent, ChangeEvent} from 'react';
-import {Box, Button, Grid, Modal, TextField} from "@mui/material";
+import React, { BaseSyntheticEvent } from 'react';
+import { Box, Button, Modal } from "@mui/material";
 import Client from "../misc/Client";
 import ModalForm from "./forms/ModalForm";
 import axios from "axios";
-import {API_BASE_URL} from "../misc/miscellaneous";
+import { API_BASE_URL } from "../misc/miscellaneous";
+import SearchBar from './forms/SearchBar';
 
 interface ITopBar {
     setClients(clients:Array<Client>):void
+    allClients:Array<Client>
     isOpen:boolean
     setIsOpen(isOpen:boolean):void
 }
@@ -23,17 +25,22 @@ const style = {
     p: 4,
 };
 
-const TopBar:React.FC<ITopBar> = ({isOpen, setIsOpen, setClients}:ITopBar) => {
+const TopBar:React.FC<ITopBar> = ({ allClients, isOpen, setIsOpen, setClients}:ITopBar) => {
 
-    const [newClient, setNewClient] = React.useState(new Client(0, '', '', '', '', '', '', 0))
+    // state for the ModalForm component
+    const [newClient, setNewClient] = React.useState(new Client(0, '', '', '', '', '', '', 0));
+    
+    // state for the SearchBar component
+    const [lastName, setLastName] = React.useState('');
 
-    const handleClose = (e:BaseSyntheticEvent) => {
+    // function handling the opening and closing of the modal
+    const handleClose = (e:BaseSyntheticEvent):any => {
         e.preventDefault();
-        setIsOpen(!isOpen)
+        setIsOpen(!isOpen);
     }
 
-    const handleSubmit = async (e:BaseSyntheticEvent) => {
-        e.preventDefault();
+    // function handling the API call to #create in Rails
+    const handleSubmit = async () => {
         try{
             const createRequest = await axios.post(`${API_BASE_URL}/clients`,{
                 first_name: newClient.firstName,
@@ -45,18 +52,55 @@ const TopBar:React.FC<ITopBar> = ({isOpen, setIsOpen, setClients}:ITopBar) => {
                 stage: newClient.stage
             })
             const createResponse = await createRequest
-            const { clients } = createResponse.data;
-            setClients(clients);
+            if(createResponse.status === 200){
+                alert(createResponse.data.response);
+            }            
         } catch(errors:any){
             if(errors.response.status === 500){
-                alert('Server Error')
+                alert('Server Error');
             }
+        }
+    }
+
+    // These two code blocks 67 - 91 make for a poorly coded program that works. Requires two sources of truth to avoid making a costly API call
+    // One source to search against and one source to view. The source to search against is never visible to the user
+    const binarySearchClients = (clients:Array<Client>, lastName:string):Array<Client> => {
+        let start:number = 0;
+        let end:number = clients.length - 1;
+        while(start <= end){
+            let middle = Math.floor((start + end ) / 2);
+            if(clients[middle].lastName.toLowerCase() === lastName.toLowerCase()){
+                return new Array<Client>(clients[middle]);
+            } else if (clients[middle].lastName.toLowerCase() < lastName.toLowerCase()) {
+                start = middle + 1;
+            } else {
+                end = middle - 1;
+            } 
+        }
+        return new Array<Client>();
+    }
+
+    const handleSearchSubmit = async (e:BaseSyntheticEvent) => {
+        e.preventDefault();
+        
+        if(lastName.length !== 0){
+            const result:Array<Client> = binarySearchClients(allClients, lastName);
+            if(result.length !== 0) {
+                setClients(result);
+            } else {
+                alert('No Clients found with that Name');
+            }
+        } else {
+            setClients(allClients);
         }
     }
 
     return(
         <div className={'top-bar'}>
-            <Button onClick={handleClose} size={'large'} variant={'contained'}>New Client</Button>
+            <Button onClick={handleClose} variant={'contained'}>New Client</Button>            
+            <form onSubmit={handleSearchSubmit}>
+                <SearchBar setLastName={setLastName} />
+            </form>
             <Modal open={isOpen} onClose={handleClose}>
                 <Box sx={style}>
                     <ModalForm client={newClient} setClient={setNewClient} handleSubmit={handleSubmit}/>

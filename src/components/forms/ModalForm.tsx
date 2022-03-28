@@ -14,7 +14,7 @@ const ModalForm:React.FC<IModalForm> = ({client, setClient, handleSubmit}:IModal
     const showStageValues = (stages:Array<string>) => {
         return stages.map((stage, index) => {
             return <MenuItem key={index} value={stage}>{stage}</MenuItem>
-        })
+        });
     }
 
     return(
@@ -89,7 +89,7 @@ const ModalForm:React.FC<IModalForm> = ({client, setClient, handleSubmit}:IModal
             </div>
             <Button type={'submit'} sx={{marginTop: '10px', marginBottom: '0px'}} onSubmit={handleSubmit} variant={'contained'}>Submit</Button>
         </Box>
-    )
+    );
 }
 
 export default ModalForm
