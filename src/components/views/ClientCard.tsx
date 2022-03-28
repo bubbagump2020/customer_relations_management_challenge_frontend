@@ -9,7 +9,6 @@ import ModalForm from "../forms/ModalForm";
 
 interface IClientCard {
     client:Client
-    clients:Array<Client>
     setClients(clients:Array<Client>):void
 }
 
@@ -25,19 +24,44 @@ const style = {
     p: 4,
 };
 
-const ClientCard:React.FC<IClientCard> = ({client, clients, setClients}:IClientCard) => {
+const ClientCard:React.FC<IClientCard> = ({client, setClients}:IClientCard) => {
 
     const [showModal, setShowModal] = React.useState(false);
+    const [editClient, setEditClient] = React.useState(client);
 
     const handleDeleteClick = async (e:BaseSyntheticEvent) => {
         e.preventDefault();
         const deleteRequest = await axios.delete(`${API_BASE_URL}/clients/${client.id}`)
-        const deleteData = await deleteRequest
+        const deleteResponse = await deleteRequest
+        const { clients } = deleteResponse.data;
+        setClients(clients);
     }
 
     const handleEditClick = (e:BaseSyntheticEvent) => {
         e.preventDefault()
         setShowModal(!showModal)
+    }
+
+    const handleSubmit = async (e:BaseSyntheticEvent) => {
+        e.preventDefault();
+        try{
+            let updateRequest = await axios.put(`${API_BASE_URL}/clients/${editClient.id}`, {
+                first_name: editClient.firstName,
+                last_name: editClient.lastName,
+                email: editClient.email,
+                phone: editClient.phone,
+                company: editClient.company,
+                probability: editClient.probability,
+                stage: editClient.stage
+            });
+            const updateResponse = await updateRequest;
+            const { clients } = updateResponse.data;
+            setClients(clients);
+        } catch(errors:any) {
+            if(errors.response.status === 404){
+                alert('Client Not Found');
+            }
+        }
     }
 
     return(
@@ -71,7 +95,7 @@ const ClientCard:React.FC<IClientCard> = ({client, clients, setClients}:IClientC
             </CardContent>
             <Modal open={showModal} onClose={handleEditClick} >
                 <Box sx={style}>
-                    <ModalForm client={client} clients={clients} setClients={setClients}/>
+                    <ModalForm client={editClient} setClient={setEditClient} handleSubmit={handleSubmit}/>
                 </Box>
             </Modal>
         </Card>

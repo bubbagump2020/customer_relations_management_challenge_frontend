@@ -10,11 +10,9 @@ interface IClientContainer {
 
 const ClientContainer:React.FC<IClientContainer> = ({ clients, setClients }:IClientContainer) => {
 
-    // Just used to contain the cards
-
-        const showClients = (clients:Array<Client>) => {
+    const showClients = (clients:Array<Client>) => {
         return clients.map((client, index) => {
-            return <ClientCard key={index} client={client} clients={clients} setClients={setClients}/>
+            return <ClientCard key={index} client={client} setClients={setClients}/>
         })
     }
 
