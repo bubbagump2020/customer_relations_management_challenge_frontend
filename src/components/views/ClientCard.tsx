@@ -57,7 +57,7 @@ const ClientCard:React.FC<IClientCard> = ({ client }:IClientCard) => {
     // API call to #update in Rails
     const handleSubmit = async (e:BaseSyntheticEvent) => {
         try{
-            const request = await axios.put(`${API_BASE_URL}/clients/${editClient.id}`, {
+            await axios.put(`${API_BASE_URL}/clients/${editClient.id}`, {
                 first_name: editClient.firstName,
                 last_name: editClient.lastName,
                 email: editClient.email,
@@ -66,10 +66,6 @@ const ClientCard:React.FC<IClientCard> = ({ client }:IClientCard) => {
                 probability: editClient.probability,
                 stage: editClient.stage
             });
-            const response = await request;
-            if(response.status === 200){
-                alert(response.data.response);
-            }
         } catch(errors:any) {
             if(errors.response.status === 404){
                 alert('Client Not Found');
