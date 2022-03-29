@@ -3,6 +3,10 @@ import ClientCard from "./ClientCard";
 import Client from "../../misc/Client";
 import {Grid, Box, Pagination } from "@mui/material";
 
+// ClientContainer will control the state of ClientCards
+// ClientContainer will not control the state of ClientCards child components
+// State control will also include functions that hanlde any sort of change.
+
 interface IClientContainer {
     clients:Array<Client>
     setClients(clients:Array<Client>):void
@@ -11,7 +15,7 @@ interface IClientContainer {
 const ClientContainer:React.FC<IClientContainer> = ({ clients, setClients }:IClientContainer) => {
 
     // constants for the pagination
-    const ITEMS_PER_PAGE:number = 19;
+    const ITEMS_PER_PAGE:number = 20;
     const PAGE_COUNT:number = Math.ceil(clients.length / ITEMS_PER_PAGE);
 
     // state for the current page of pagination

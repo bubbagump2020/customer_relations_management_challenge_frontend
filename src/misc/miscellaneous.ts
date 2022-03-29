@@ -1,1 +1,1 @@
-export const API_BASE_URL:string = 'http://localhost:3001'
+export const API_BASE_URL:string = 'https://warm-taiga-87334.herokuapp.com';
