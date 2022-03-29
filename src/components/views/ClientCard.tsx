@@ -56,7 +56,6 @@ const ClientCard:React.FC<IClientCard> = ({ client }:IClientCard) => {
     }
     // API call to #update in Rails
     const handleSubmit = async (e:BaseSyntheticEvent) => {
-        e.preventDefault();
         try{
             const request = await axios.put(`${API_BASE_URL}/clients/${editClient.id}`, {
                 first_name: editClient.firstName,
