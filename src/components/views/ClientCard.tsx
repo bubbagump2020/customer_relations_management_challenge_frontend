@@ -39,10 +39,10 @@ const ClientCard:React.FC<IClientCard> = ({ client }:IClientCard) => {
     // API call to #destroy in Rails
     const handleDeleteClick = async () => {
         try{
-            const deleteRequest = await axios.delete(`${API_BASE_URL}/clients/${client.id}`);
-            const deleteResponse = await deleteRequest;
-            if(deleteResponse.status === 200){
-                alert(deleteResponse.data.response);
+            const request = await axios.delete(`${API_BASE_URL}/clients/${client.id}`);
+            const response = await request;
+            if(response.status === 200){
+                alert(response.data.response);
                 // For some reason even without the e.preventDefault() the page still won't reload, using this
                 // to force a page reload.
                 window.location.reload();
@@ -58,7 +58,7 @@ const ClientCard:React.FC<IClientCard> = ({ client }:IClientCard) => {
     const handleSubmit = async (e:BaseSyntheticEvent) => {
         e.preventDefault();
         try{
-            const updateRequest = await axios.put(`${API_BASE_URL}/clients/${editClient.id}`, {
+            const request = await axios.put(`${API_BASE_URL}/clients/${editClient.id}`, {
                 first_name: editClient.firstName,
                 last_name: editClient.lastName,
                 email: editClient.email,
@@ -67,9 +67,9 @@ const ClientCard:React.FC<IClientCard> = ({ client }:IClientCard) => {
                 probability: editClient.probability,
                 stage: editClient.stage
             });
-            const updateResponse = await updateRequest;
-            if(updateResponse.status === 200){
-                alert(updateResponse.data.response);
+            const response = await request;
+            if(response.status === 200){
+                alert(response.data.response);
             }
         } catch(errors:any) {
             if(errors.response.status === 404){
