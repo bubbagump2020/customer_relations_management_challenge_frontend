@@ -86,11 +86,17 @@ const ClientCard:React.FC<IClientCard> = ({ client }:IClientCard) => {
             <CardContent>
                 <Grid>
                     <Typography variant={'h5'}>Sale Stage: {client.stage}</Typography>
+                    <br/>
                     <Typography variant={'h5'}>Sale Probability: {client.probability}%</Typography>
+                    <br/>
+                    <Typography variant={'h5'}>Stage: {client.stage}</Typography>
                 </Grid>
+                <br/>
                 <Grid>
                     <Typography variant={'h6'}>Company: {client.company}</Typography>
+                    <br/>
                     <Typography variant={'h6'}>Phone: {client.phone}</Typography>
+                    <br/>
                     <Typography variant={'h6'}>Email: {client.email}</Typography>
                 </Grid>
                 <div />
